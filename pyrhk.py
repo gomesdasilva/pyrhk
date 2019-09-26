@@ -222,9 +222,9 @@ def get_bv(star_id, alerts=True):
     err_msg = 'OK'
 
     try:
-        query = customSimbad.query_object(star)
+        query = customSimbad.query_object(star_id)
     except:
-        err_msg = f"*** ERROR: Could not identify {star}."
+        err_msg = f"*** ERROR: Could not identify {star_id}."
         if alerts:
             print(err_msg)
         return np.nan, np.nan, np.nan, err_msg
@@ -237,7 +237,7 @@ def get_bv(star_id, alerts=True):
     const = np.ma.core.MaskedConstant
 
     if isinstance(flux_b, const) or isinstance(flux_v, const):
-        err_msg = f"*** ERROR: {star}: No values of B and/or V in Simbad to calculate B-V."
+        err_msg = f"*** ERROR: {star_id}: No values of B and/or V in Simbad to calculate B-V."
         if alerts:
             print(err_msg)
         return np.nan, np.nan, np.nan, err_msg
