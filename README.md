@@ -8,3 +8,6 @@ What pyrhk can do:
     - Rutten (1984):  for 0.3 < B-V < 1.6 (MS stars) and 0.3 < B-V < 1.7 (giant stars)
 - Estimate gyrochronological rotation period and age using relations from Noyes et al. (1984) and Mamajek & Hillenbrand (2008).
 - Obtain B-V colour from Simbad (requires `astroquery` module installed).
+
+
+![SMW calibration for ESPRESSO](smw_espresso_cal.pdf "SMW ESPRESSO calibration")
