@@ -54,7 +54,7 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', sptype='MS'):
         S-index calibrated to the Mt. Wilson scale.
     smw_err : float, list, array
         Error on 'smw'.
-    bv : float, list, array
+    bv : float
         B-V colour.
     method : string
         Method to be used to calculate bolometric correction, Ccf: 'middelkoop' (default) or 'rutten'.
@@ -79,7 +79,7 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', sptype='MS'):
     """
     smw = np.asarray(smw)
     smw_err = np.asarray(smw_err)
-    bv = np.asarray(bv)
+    bv = float(bv)
 
     if not isinstance(method, str) or method not in ('middelkoop', 'rutten'):
         print("*** ERROR: 'method' should be either 'middelkoop' or 'rutten'.")
@@ -136,7 +136,7 @@ def calc_prot_age(log_rhk, bv):
     -----------
     log_rhk : float, list, array
         Logarithm (base 10) of the R'HK index.
-    bv : float, list, array
+    bv : float
         B-V colour.
 
     Returns:
@@ -159,7 +159,7 @@ def calc_prot_age(log_rhk, bv):
     Range of Mamajek & Hillenbrand (2008) relation for ages: B-V >= 0.5
     """
     log_rhk = np.asarray(log_rhk)
-    bv = np.asarray(bv)
+    bv = float(bv)
 
     if (log_rhk < -4.3) & (log_rhk > -5.5):
         if bv < 1:
