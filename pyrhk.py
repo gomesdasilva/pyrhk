@@ -2,10 +2,14 @@
 # Institute of Astrophysics and Space Sciences, Porto, Portugal
 # Joao.Silva@astro.up.pt
 # compatibility with python 2/3:
+
 from __future__ import print_function
 from __future__ import division
 import numpy as np
-from astroquery.simbad import Simbad
+try:
+    from astroquery.simbad import Simbad
+except:
+    print("*** WARNING: astroquery is not installed but required for the get_bv function")
 
 
 
