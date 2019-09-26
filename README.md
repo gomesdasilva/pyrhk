@@ -10,4 +10,6 @@ What pyrhk can do:
 - Obtain B-V colour from Simbad (requires `astroquery` module installed).
 
 
+## Calibration of SMW for ESPRESSO:
+
 ![SMW calibration for ESPRESSO](smw_espresso_cal.png "SMW ESPRESSO calibration")
