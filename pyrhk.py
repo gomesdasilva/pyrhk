@@ -33,7 +33,7 @@ def calc_smw(caii, caii_err, instr='ESPRESSO'):
             Error on 'smw'.
 
     Calibration for HARPS from Lovis et al. (2011).
-    Calibration for ESPRESSO based on five stars (Eps Ind, Tau Cet, HD102365, HD192310) with more than 100 observations from HARPS and ESPRESSO.
+    Calibration for ESPRESSO based on five stars (e Eri, Eps Ind, Tau Cet, HD102365, HD192310) with more than 100 observations from HARPS and ESPRESSO.
     """
     caii = np.asarray(caii)
     caii_err = np.asarray(caii_err)
