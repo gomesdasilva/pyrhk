@@ -235,6 +235,10 @@ def get_bv(star_id, alerts=True):
             print(err_msg)
         return np.nan, np.nan, np.nan, err_msg
 
+    if query is None:
+        err_msg = f"*** ERROR: Could not identify {star_id}."
+        return np.nan, np.nan, np.nan, err_msg
+
     flux_v = query['FLUX_V'][0]
     flux_v_err = query['FLUX_ERROR_V'][0]
     flux_v_ref = query['FLUX_BIBCODE_V'][0].decode("UTF-8")
