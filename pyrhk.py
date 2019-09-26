@@ -1,7 +1,9 @@
 # J. Gomes da Silva, 2019
 # Institute of Astrophysics and Space Sciences, Porto, Portugal
 # Joao.Silva@astro.up.pt
-
+# compatibility with python 2/3:
+from __future__ import print_function
+from __future__ import division
 import numpy as np
 from astroquery.simbad import Simbad
 
@@ -33,8 +35,8 @@ def calc_smw(caii, caii_err, instr='ESPRESSO'):
     caii_err = np.asarray(caii_err)
 
     if instr == 'ESPRESSO':
-        a = 1.041 # (+/- 0.011)
-        b = 0.0262 # (+/- 0.0022)
+        a = 1.0410446242836022 # (+/- 0.011)
+        b = 0.026158982928234625 # (+/- 0.0022)
     if instr == 'HARPS':
         a = 1.111
         b = 0.0153
@@ -89,13 +91,13 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', sptype='MS'):
 
     if method == 'middelkoop':
         if (bv > 0.44) & (bv < 1.20):
-            logCcf = 1.13*bv**3 - 3.91*bv**2 + 2.84*bv -0.47
+            logCcf = 1.13*bv**3 - 3.91*bv**2 + 2.84*bv - 0.47
             if bv < 0.63:
                 logCcf = logCcf + 0.135*(0.63-bv) - 0.814*(0.63-bv)**2 + 6.03*(0.63-bv)**3
         else:
             logCcf = np.nan
 
-    if method == 'rutten':
+    elif method == 'rutten':
         if sptype == 'MS':
             if (bv >= 0.3) & (bv <= 1.6):
                 logCcf = 0.25*bv**3 - 1.33*bv**2 + 0.43*bv + 0.24
@@ -110,8 +112,9 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', sptype='MS'):
     if logCcf:
         Ccf = 10**logCcf
         # Noyes et al. (1984)
-        rhk = 1.36e-4*Ccf*smw
+        rhk = 1.34e-4*Ccf*smw
         rhk_err = 1.34e-4*Ccf*smw_err
+
         # Hartmann et al. (1984)
         log_rphot = -4.898 + 1.918*bv**2 - 2.893*bv**3
         rphot = 10**log_rphot
@@ -153,7 +156,6 @@ def calc_prot_age(log_rhk, bv):
         Age via Mamajek & Hillenbrand (2008).
     age_m08_err : float, array
         Error on 'age_m08'.
-
 
     Range of logR'HK-Prot relation: -5.5 < logR'HK < -4.3
     Range of Mamajek & Hillenbrand (2008) relation for ages: B-V >= 0.5
