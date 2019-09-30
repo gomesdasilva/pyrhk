@@ -6,10 +6,14 @@ What pyrhk can do:
 - Calculate logR'HK via Noyes et al. (1984) using two bolometric corrections:
     - Middelkoop (1982): for 0.44 < B-V < 1.20 (MS stars, widely used)
     - Rutten (1984):  for 0.3 < B-V < 1.6 (MS stars) and 0.3 < B-V < 1.7 (giant stars)
-- Estimate gyrochronological rotation period and age using relations from Noyes et al. (1984) and Mamajek & Hillenbrand (2008).
+- Estimate gyrochronologic rotation period and age using relations from Noyes et al. (1984) and Mamajek & Hillenbrand (2008).
 - Obtain B-V colour from Simbad (requires `astroquery` module installed).
 
 
 ### Calibration of SMW for ESPRESSO:
 
-![SMW calibration for ESPRESSO](smw_espresso_cal.png "SMW ESPRESSO calibration")
+Using 27 stars with data from HARPS and ESPRESSO.
+Will be updated as more data is available.
+
+
+![SMW calibration for ESPRESSO](smw_espresso_cal_all.png "SMW ESPRESSO calibration")
