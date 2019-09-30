@@ -14,6 +14,7 @@ What pyrhk can do:
 
 Using 27 stars with data from HARPS and ESPRESSO.
 Will be updated as more data is available.
+This is a preliminary calibration, use with care.
 
 
 ![SMW calibration for ESPRESSO](smw_espresso_cal_all.png "SMW ESPRESSO calibration")
