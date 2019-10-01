@@ -15,7 +15,7 @@ except:
 
 
 def calc_smw(caii, caii_err, instr='ESPRESSO'):
-    """Calculates S_MW (S Mt. Wilson, Vaughan et al. (1981)) index based on the CaII H&K lines.
+    """Calculates S_MW (Mt. Wilson S-index, Vaughan et al. (1981)) index based on the CaII H&K lines.
 
     Parameters:
     -----------
