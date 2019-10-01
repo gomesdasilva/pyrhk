@@ -123,7 +123,7 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', sptype='MS'):
         log_rphot = -4.898 + 1.918*bv**2 - 2.893*bv**3
         rphot = 10**log_rphot
 
-        if (rhk-rphot) > 0.0:
+        if np.any(rhk-rphot) > 0.0:
             log_rhk = np.log10(rhk-rphot)
             log_rhk_err = rhk_err/(rhk-rphot)/np.log(10)
         else:
@@ -167,7 +167,7 @@ def calc_prot_age(log_rhk, bv):
     log_rhk = np.asarray(log_rhk)
     bv = float(bv)
 
-    if (log_rhk < -4.3) & (log_rhk > -5.5):
+    if np.any(log_rhk < -4.3) & np.any(log_rhk > -5.5):
         if bv < 1:
             tau = 1.362 - 0.166*(1-bv) + 0.025*(1-bv)**2 - 5.323*(1-bv)**3
         else:
@@ -186,7 +186,7 @@ def calc_prot_age(log_rhk, bv):
         prot_m08_err = np.nan
 
     # Calculate age:
-    if (prot_m08 > 0.0) & (bv >= 0.50):
+    if np.any(prot_m08 > 0.0) & (bv >= 0.50):
         age_m08 = 1e-3*(prot_m08/0.407/(bv - 0.495)**0.325)**(1./0.566)
         age_m08_err = 0.05*np.log(10)*age_m08
     else:
