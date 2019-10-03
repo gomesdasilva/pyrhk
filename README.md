@@ -10,6 +10,8 @@ What pyrhk can do:
 - Obtain B-V colour from Simbad (requires `astroquery` module installed).
 
 
+Important note: The output errors are only considering photon noise.
+
 ### Calibration of SMW for ESPRESSO:
 
 Using 27 stars with data from HARPS and ESPRESSO.

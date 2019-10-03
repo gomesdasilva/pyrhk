@@ -1,8 +1,8 @@
 # J. Gomes da Silva, 2019
 # Institute of Astrophysics and Space Sciences, Porto, Portugal
 # Joao.Silva@astro.up.pt
-# compatibility with python 2/3:
 
+# compatibility with python 2/3:
 from __future__ import print_function
 from __future__ import division
 import numpy as np
@@ -15,7 +15,7 @@ except:
 
 
 def calc_smw(caii, caii_err, instr='ESPRESSO'):
-    """Calculates S_MW (Mt. Wilson S-index, Vaughan et al. (1981)) index based on the CaII H&K lines.
+    """Calculates S_MW (Mt. Wilson S-index, Vaughan et al. (1978)) index based on the CaII H&K lines.
 
     Parameters:
     -----------
@@ -167,6 +167,7 @@ def calc_prot_age(log_rhk, bv):
     log_rhk = np.asarray(log_rhk)
     bv = float(bv)
 
+    # Calculate Prot:
     if np.any(log_rhk < -4.3) & np.any(log_rhk > -5.5):
         if bv < 1:
             tau = 1.362 - 0.166*(1-bv) + 0.025*(1-bv)**2 - 5.323*(1-bv)**3
