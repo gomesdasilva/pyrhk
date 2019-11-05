@@ -102,12 +102,12 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='MS'):
             logCcf = np.nan
 
     elif method == 'rutten':
-        if sptype == 'MS':
+        if lum_class == 'MS':
             if (bv >= 0.3) & (bv <= 1.6):
                 logCcf = 0.25*bv**3 - 1.33*bv**2 + 0.43*bv + 0.24
             else:
                 logCcf = np.nan
-        if sptype == 'giant':
+        if lum_class == 'giant':
             if (bv >= 0.3) & (bv <= 1.7):
                 logCcf = -0.066*bv**3 - 0.25*bv**2 - 0.49*bv + 0.45
             else:
