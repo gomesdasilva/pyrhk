@@ -51,7 +51,7 @@ def calc_smw(caii, caii_err, instr='ESPRESSO'):
     return smw, smw_err
 
 
-def calc_rhk(smw, smw_err, bv, method='middelkoop', sptype='MS'):
+def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='MS'):
     """Calculates logR'HK via Noyes et al. (1984) with bolometric correction using Middelkoop (1982) or Rutten (1984) relations.
 
     Parameters:
@@ -64,7 +64,7 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', sptype='MS'):
         B-V colour.
     method : string
         Method to be used to calculate bolometric correction, Ccf: 'middelkoop' (default) or 'rutten'.
-    sptype : string
+    lum_class : string
         If using 'rutten' method, use 'MS' (default) if star is Main Sequence or 'giant' if star is giant or subgiant. IMPORTANT: the 'noyes' method is only meant for Main Sequence stars.
 
     Returns:
@@ -90,8 +90,8 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', sptype='MS'):
     if not isinstance(method, str) or method not in ('middelkoop', 'rutten'):
         print("*** ERROR: 'method' should be either 'middelkoop' or 'rutten'.")
 
-    if not isinstance(sptype, str) or sptype not in ('MS', 'giants'):
-        print("*** ERROR: 'sptype' should be either 'MS' or 'giants'.")
+    if not isinstance(lum_class, str) or lum_class not in ('MS', 'giant'):
+        print("*** ERROR: 'lum_class' should be either 'MS' or 'giant'.")
 
     if method == 'middelkoop':
         if (bv > 0.44) & (bv < 1.20):
