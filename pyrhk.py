@@ -42,6 +42,9 @@ def calc_smw(caii, caii_err, instr='ESPRESSO'):
         a = 1.222
         b = 0.001
     if instr == 'HARPS':
+        """Lovis et al. (2010), based on 7 stars
+        with 0.137 < SMW < 0.393 from Baliunas et al. (1995).
+        Calibration used by HARPS pipeline."""
         a = 1.111
         b = 0.0153
 
@@ -51,8 +54,8 @@ def calc_smw(caii, caii_err, instr='ESPRESSO'):
     return smw, smw_err
 
 
-def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='MS'):
-    """Calculates logR'HK via Noyes et al. (1984) with bolometric correction using Middelkoop (1982) or Rutten (1984) relations.
+def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='V'):
+    """Calculates logR'HK via Noyes et al. (1984) with bolometric corrections using Middelkoop (1982), Rutten (1984), or Suárez Mascareño (2015, 2016) relations.
 
     Parameters:
     -----------
@@ -63,23 +66,31 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='MS'):
     bv : float
         B-V colour.
     method : string
-        Method to be used to calculate bolometric correction, Ccf: 'middelkoop' (default) or 'rutten'.
+        Method to be used to calculate bolometric correction, Ccf: 'middelkoop' (default), 'rutten', or 'mascareno'.
     lum_class : string
-        If using 'rutten' method, use 'MS' (default) if star is Main Sequence or 'giant' if star is giant or subgiant. IMPORTANT: the 'noyes' method is only meant for Main Sequence stars.
+        If using 'rutten' method, use 'V', 'VI' (default) if star is Main Sequence or 'III', 'IV' if star is giant or subgiant. IMPORTANT: the 'middelkoop' and 'mascareno' methods are only meant for Main Sequence (lum_class='V') stars.
 
     Returns:
     --------
     log_rhk : float, array
         Logarithm (base 10) of the R'HK chromosperic emission index.
     log_rhk_err : float, array
-        Error on log_rhk
+        Error on log_rhk.
+    rhk : float, array
+        R'HK chromospheric emission index.
+    rhk_err : float, array
+        Error on R'HK.
     method : string
         Method used to calculate Ccf.
 
-    The calibration used in the HARPS pipeline is the 'middelkoop', the most widely used. The 'rutten' calibration is more useful if using dwarfs hotter than B-V = 0.44, cooler than B-V = 1.2, and/or giants and subgiants.
+    The calibration used by the HARPS pipeline is the 'middelkoop', the most widely used. Only for main sequence stars.
+    The 'rutten' calibration is more useful if using dwarfs hotter than B-V = 0.44, cooler than B-V = 1.2, and/or giants (and subgiants).
+    The 'mascareno' calibration includes M-dwarf stars. Only for MS.
 
-    Range of the 'middelkoop' calibration: 0.44 < B-V < 1.20
-    Range of the 'rutten' calibration: 0.30 < B-V < 1.60
+    Range of the 'middelkoop' calibration (V): 0.44 < B-V < 1.20
+    Range of the 'rutten' calibration (V): 0.30 < B-V < 1.60
+    Range of the 'rutten' calibration (IV, III): 0.30 < B-V < 1.70
+    Range of the 'mascareno' calibration (V): 0.40 < B-V < 1.90
 
     NOTE: If the B-V value is out of range the result will be 'NaN'.
     """
@@ -87,53 +98,79 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='MS'):
     smw_err = np.asarray(smw_err)
     bv = float(bv)
 
-    if not isinstance(method, str) or method not in ('middelkoop', 'rutten'):
-        print("*** ERROR: 'method' should be either 'middelkoop' or 'rutten'.")
+    if not isinstance(method, str) or method not in ('middelkoop', 'rutten', 'mascareno'):
+        print("*** ERROR: 'method' should be 'middelkoop', 'rutten', or 'mascareno.")
 
-    if not isinstance(lum_class, str) or lum_class not in ('MS', 'giant'):
-        print("*** ERROR: 'lum_class' should be either 'MS' or 'giant'.")
+    if not isinstance(lum_class, str) or lum_class not in ('VI', 'V', 'IV', 'III'):
+        print("*** ERROR: 'lum_class' should be 'VI', 'V', 'VI' or 'III'.")
 
     if method == 'middelkoop':
-        if (bv > 0.44) & (bv < 1.20):
-            logCcf = 1.13*bv**3 - 3.91*bv**2 + 2.84*bv - 0.47
-            if bv < 0.63:
-                logCcf = logCcf + 0.135*(0.63-bv) - 0.814*(0.63-bv)**2 + 6.03*(0.63-bv)**3
+        if lum_class in ('VI', 'V'):
+            if (bv > 0.44) & (bv < 1.20):
+                logCcf = 1.13*bv**3 - 3.91*bv**2 + 2.84*bv - 0.47
+                if bv < 0.63:
+                    logCcf = logCcf + 0.135*(0.63-bv) - 0.814*(0.63-bv)**2 + 6.03*(0.63-bv)**3
+            else:
+                logCcf = np.nan
         else:
             logCcf = np.nan
 
     elif method == 'rutten':
-        if lum_class == 'MS':
+        if lum_class in ('VI', 'V'):
             if (bv >= 0.3) & (bv <= 1.6):
                 logCcf = 0.25*bv**3 - 1.33*bv**2 + 0.43*bv + 0.24
             else:
                 logCcf = np.nan
-        if lum_class == 'giant':
+        elif lum_class in ('IV', 'III'):
             if (bv >= 0.3) & (bv <= 1.7):
                 logCcf = -0.066*bv**3 - 0.25*bv**2 - 0.49*bv + 0.45
             else:
                 logCcf = np.nan
+        else:
+            logCcf = np.nan
+
+    elif method == 'mascareno':
+        if lum_class in ('VI', 'V'):
+            if (bv >= 0.4) & (bv <= 1.9):
+                logCcf = 0.668 - 1.270*bv + 0.645*bv**2 - 0.443*bv**3
+            else:
+                logCcf = np.nan
+        else:
+            logCcf = np.nan
+
 
     if logCcf:
         Ccf = 10**logCcf
-        # Noyes et al. (1984)
-        rhk = 1.34e-4*Ccf*smw
-        rhk_err = 1.34e-4*Ccf*smw_err
+        # Noyes et al. (1984):
+        r = 1.34e-4*Ccf*smw
+        r_err = 1.34e-4*Ccf*smw_err
 
-        # Hartmann et al. (1984)
-        log_rphot = -4.898 + 1.918*bv**2 - 2.893*bv**3
-        rphot = 10**log_rphot
+        if method in ("middelkoop", "rutten"):
+            # Hartmann et al. (1984):
+            log_rphot = -4.898 + 1.918*bv**2 - 2.893*bv**3
+            rphot = 10**log_rphot
+        elif method == "mascareno":
+            rphot = 1.48e-4 * np.exp(-4.3658 * bv)
 
-        if np.any(rhk-rphot) > 0.0:
-            log_rhk = np.log10(rhk-rphot)
-            log_rhk_err = rhk_err/(rhk-rphot)/np.log(10)
+
+        if np.any(r-rphot) > 0.0:
+            log_rhk = np.log10(r-rphot)
+            log_rhk_err = r_err/(r-rphot)/np.log(10)
+            rhk = r - rphot
+            #rhk_err = 10**log_rhk_err
+            rhk_err = r_err
         else:
             log_rhk = np.nan
             log_rhk_err = np.nan
+            rhk = np.nan
+            rhk_err = np.nan
     else:
         log_rhk = np.nan
         log_rhk_err = np.nan
+        rhk = np.nan
+        rhk_err = np.nan
 
-    return log_rhk, log_rhk_err, method
+    return log_rhk, log_rhk_err, rhk, rhk_err, method
 
 
 def calc_prot_age(log_rhk, bv):
