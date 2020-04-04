@@ -6,7 +6,7 @@ What pyrhk can do:
 - Calculate logR'HK via Noyes et al. (1984) using two bolometric corrections:
     - Middelkoop (1982): for 0.44 < B-V < 1.20 (MS stars, widely used)
     - Rutten (1984):  for 0.3 < B-V < 1.6 (MS stars) and 0.3 < B-V < 1.7 (giant stars)
-- Estimate gyrochronologic rotation period and age using relations from Noyes et al. (1984) and Mamajek & Hillenbrand (2008).
+- Estimate rotation period and age using activity relations from Noyes et al. (1984) and Mamajek & Hillenbrand (2008).
 - Obtain B-V colour from Simbad (requires `astroquery` module installed).
 
 
