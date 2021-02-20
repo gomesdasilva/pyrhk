@@ -1,5 +1,5 @@
 # pyrhk
-Python functions to calculate logR'HK for HARPS and ESPRESSO
+Python functions to calculate logR'HK for HARPS and ESPRESSO and estimate rotation periods and ages.
 
 What pyrhk can do:
 - Calibrate S-index values to the Mt. Wilson scale (SMW) for HARPS (using Gomes da Silva et al. 2021 or Lovis et al. 2011 calibrations) or ESPRESSO (using a preliminary calibration) spectrographs.
