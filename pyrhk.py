@@ -1,6 +1,9 @@
-# J. Gomes da Silva, 2019
-# Institute of Astrophysics and Space Sciences, Porto, Portugal
-# Joao.Silva@astro.up.pt
+"""
+J. Gomes da Silva, 2019
+Instituto de Astrofísica e Ciências do Espaço (IA)
+Centro de Astrofísica da Universidade do Porto (CAUP)
+Joao.Silva@astro.up.pt
+"""
 
 # compatibility with python 2/3:
 from __future__ import print_function
@@ -83,8 +86,6 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='V'):
         R'HK chromospheric emission ratio.
     rhk_err : float, array
         Error on R'HK.
-    method : string
-        Method used to calculate Ccf.
 
     The calibration used by the HARPS pipeline is the 'middelkoop', the most widely used. Only for main sequence stars.
     The 'rutten' calibration is more useful if using dwarfs hotter than B-V = 0.44, cooler than B-V = 1.2, and/or giants (and subgiants).
@@ -279,7 +280,7 @@ def get_bv(star_id, alerts=True):
 
     flux_v = query['FLUX_V'][0]
     flux_v_err = query['FLUX_ERROR_V'][0]
-    flux_v_ref = query['FLUX_BIBCODE_V'][0].decode("UTF-8")
+    flux_v_ref = query['FLUX_BIBCODE_V'][0]#.decode("UTF-8")
     flux_b = query['FLUX_B'][0]
     flux_b_err = query['FLUX_ERROR_B'][0]
     const = np.ma.core.MaskedConstant
