@@ -60,7 +60,7 @@ def calc_smw(caii, caii_err, instr='HARPS_GDS21'):
     return smw, smw_err
 
 
-def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='V'):
+def calc_rhk(smw, smw_err, bv, bv_err=0.01, method='middelkoop', lum_class='V'):
     """Calculates logR'HK via Noyes et al. (1984) with bolometric corrections using Middelkoop (1982), Rutten (1984), or Suárez Mascareño (2015, 2016) relations.
 
     Parameters:
@@ -72,7 +72,7 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='V'):
     bv : float
         B-V colour.
     method : string
-        Method to be used to calculate bolometric correction, Ccf: 'middelkoop' (default), 'rutten', or 'mascareno'.
+        Method used to calculate bolometric correction, Ccf: 'middelkoop' (default), 'rutten', or 'mascareno'.
     lum_class : string
         If using 'rutten' method, use 'V', 'VI' if star is Main Sequence or 'III', 'IV' if star is giant or subgiant. IMPORTANT: the 'middelkoop' and 'mascareno' methods are only meant for Main Sequence (lum_class='V') stars (default).
 
@@ -151,12 +151,14 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', lum_class='V'):
         if method in ("middelkoop", "rutten"):
             # Hartmann et al. (1984):
             log_rphot = -4.898 + 1.918*bv**2 - 2.893*bv**3
+            #log_rphot_err = (2*1.918*bv_err) - 3 * 2.893 * bv_err**2
             rphot = 10**log_rphot
         elif method == "mascareno":
             rphot = 1.48e-4 * np.exp(-4.3658 * bv)
 
-        if np.any(r-rphot) > 0.0:
+        if np.any(r-rphot > 0.0):
             log_rhk = np.log10(r-rphot)
+            #log_rhk_err = np.sqrt((r_err/(r-rphot)/np.log(10))**2 + log_rphot_err**2)
             log_rhk_err = r_err/(r-rphot)/np.log(10)
             rhk = r - rphot
             rhk_err = r_err
@@ -200,7 +202,7 @@ def calc_prot_age(log_rhk, bv):
         Error on 'age_m08'.
 
     Range of logR'HK-Prot relation: -5.5 < logR'HK < -4.3
-    Range of Mamajek & Hillenbrand (2008) relation for ages: B-V >= 0.5
+    Range of Mamajek & Hillenbrand (2008) relation for ages: 0.5 < B-V < 0.9
     """
     log_rhk = np.asarray(log_rhk)
     bv = float(bv)
@@ -225,9 +227,10 @@ def calc_prot_age(log_rhk, bv):
         prot_m08_err = np.nan
 
     # Calculate gyrochronology age:
-    if np.any(prot_m08 > 0.0) & (bv >= 0.50):
+    if np.any(prot_m08 > 0.0) & (bv > 0.50) & (bv < 0.9):
         age_m08 = 1e-3*(prot_m08/0.407/(bv - 0.495)**0.325)**(1./0.566)
-        age_m08_err = 0.05*np.log(10)*age_m08
+        #age_m08_err = 0.05*np.log(10)*age_m08
+        age_m08_err  = 0.2 * age_m08 * np.log(10) # using 0.2 dex typical error from paper
     else:
         age_m08 = np.nan
         age_m08_err = np.nan
@@ -272,7 +275,7 @@ def get_bv(star_id, alerts=True):
         err_msg = f"*** ERROR: Could not identify {star_id}."
         if alerts:
             print(err_msg)
-        return np.nan, np.nan, np.nan, err_msg
+        return np.nan, np.nan, np.nan
 
     if query is None:
         err_msg = f"*** ERROR: Could not identify {star_id}."
@@ -289,7 +292,7 @@ def get_bv(star_id, alerts=True):
         err_msg = f"*** ERROR: {star_id}: No values of B and/or V in Simbad to calculate B-V."
         if alerts:
             print(err_msg)
-        return np.nan, np.nan, np.nan, err_msg
+        return np.nan, np.nan, np.nan
     else:
         bv = flux_b - flux_v
 
@@ -300,4 +303,4 @@ def get_bv(star_id, alerts=True):
     bv_err = np.sqrt(flux_b_err**2 + flux_v_err**2)
     bv_ref = flux_v_ref
 
-    return bv, bv_err, bv_ref, err_msg
+    return bv, bv_err, bv_ref
