@@ -4,10 +4,6 @@ Instituto de Astrofísica e Ciências do Espaço (IA)
 Centro de Astrofísica da Universidade do Porto (CAUP)
 Joao.Silva@astro.up.pt
 """
-
-# compatibility with python 2/3:
-from __future__ import print_function
-from __future__ import division
 import numpy as np
 try:
     from astroquery.simbad import Simbad
