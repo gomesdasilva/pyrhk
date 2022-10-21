@@ -60,7 +60,7 @@ def calc_smw(caii, caii_err, instr='HARPS_GDS21'):
     return smw, smw_err
 
 
-def calc_rhk(smw, smw_err, bv, bv_err=0.01, method='middelkoop', lum_class='V'):
+def calc_rhk(smw, smw_err, bv, method='middelkoop', evstage='MS'):
     """Calculates logR'HK via Noyes et al. (1984) with bolometric corrections using Middelkoop (1982), Rutten (1984), or Suárez Mascareño (2015, 2016) relations.
 
     Parameters:
@@ -73,8 +73,8 @@ def calc_rhk(smw, smw_err, bv, bv_err=0.01, method='middelkoop', lum_class='V'):
         B-V colour.
     method : string
         Method used to calculate bolometric correction, Ccf: 'middelkoop' (default), 'rutten', or 'mascareno'.
-    lum_class : string
-        If using 'rutten' method, use 'V', 'VI' if star is Main Sequence or 'III', 'IV' if star is giant or subgiant. IMPORTANT: the 'middelkoop' and 'mascareno' methods are only meant for Main Sequence (lum_class='V') stars (default).
+    evstage : string,
+        Evolutionary stage. If using 'rutten' method, use 'MS' if star is in the Main Sequence or 'evol' if star is evolved (giant or subgiant). IMPORTANT: the 'middelkoop' and 'mascareno' methods are only meant for Main Sequence (evstage='MS') stars (default).
 
     Returns:
     --------
@@ -91,10 +91,10 @@ def calc_rhk(smw, smw_err, bv, bv_err=0.01, method='middelkoop', lum_class='V'):
     The 'rutten' calibration is more useful if using dwarfs hotter than B-V = 0.44, cooler than B-V = 1.2, and/or giants (and subgiants).
     The 'mascareno' calibration includes cooler M-dwarfs. Only for MS.
 
-    Range of the 'middelkoop' calibration (V): 0.44 < B-V < 1.20
-    Range of the 'rutten' calibration (V): 0.30 < B-V < 1.60
-    Range of the 'rutten' calibration (IV, III): 0.30 < B-V < 1.70
-    Range of the 'mascareno' calibration (V): 0.40 < B-V < 1.90
+    Range of the 'middelkoop' calibration (MS): 0.44 < B-V < 1.20
+    Range of the 'rutten' calibration (MS): 0.30 < B-V < 1.60
+    Range of the 'rutten' calibration (evol): 0.30 < B-V < 1.70
+    Range of the 'mascareno' calibration (MS): 0.40 < B-V < 1.90
 
     NOTE: If the B-V value is out of range the result will be 'np.nan'.
     """
@@ -104,11 +104,11 @@ def calc_rhk(smw, smw_err, bv, bv_err=0.01, method='middelkoop', lum_class='V'):
     if not isinstance(method, str) or method not in ('middelkoop', 'rutten', 'mascareno'):
         print("*** ERROR: 'method' should be 'middelkoop', 'rutten', or 'mascareno.")
 
-    if not isinstance(lum_class, str) or lum_class not in ('VI', 'V', 'IV', 'III'):
-        print("*** ERROR: 'lum_class' should be 'VI', 'V', 'VI' or 'III'.")
+    if not isinstance(evstage, str) or evstage not in ('MS', 'evol'):
+        print("*** ERROR: 'evstage' should be 'MS' or 'evol'.")
 
     if method == 'middelkoop':
-        if lum_class in ('VI', 'V'):
+        if evstage in ('MS'):
             if (bv > 0.44) & (bv < 1.20):
                 logCcf = 1.13*bv**3 - 3.91*bv**2 + 2.84*bv - 0.47
                 if bv < 0.63:
@@ -119,12 +119,12 @@ def calc_rhk(smw, smw_err, bv, bv_err=0.01, method='middelkoop', lum_class='V'):
             logCcf = np.nan
 
     elif method == 'rutten':
-        if lum_class in ('VI', 'V'):
+        if evstage in ('MS'):
             if (bv >= 0.3) & (bv <= 1.6):
                 logCcf = 0.25*bv**3 - 1.33*bv**2 + 0.43*bv + 0.24
             else:
                 logCcf = np.nan
-        elif lum_class in ('IV', 'III'):
+        elif evstage in ('evol'):
             if (bv >= 0.3) & (bv <= 1.7):
                 logCcf = -0.066*bv**3 - 0.25*bv**2 - 0.49*bv + 0.45
             else:
@@ -133,7 +133,7 @@ def calc_rhk(smw, smw_err, bv, bv_err=0.01, method='middelkoop', lum_class='V'):
             logCcf = np.nan
 
     elif method == 'mascareno':
-        if lum_class in ('VI', 'V'):
+        if evstage in ('MS'):
             if (bv >= 0.4) & (bv <= 1.9):
                 logCcf = 0.668 - 1.270*bv + 0.645*bv**2 - 0.443*bv**3
             else:
