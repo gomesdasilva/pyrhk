@@ -103,9 +103,11 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', evstage='MS'):
 
     if not isinstance(method, str) or method not in ('middelkoop', 'rutten', 'mascareno'):
         print("*** ERROR: 'method' should be 'middelkoop', 'rutten', or 'mascareno.")
+        return
 
     if not isinstance(evstage, str) or evstage not in ('MS', 'evol'):
         print("*** ERROR: 'evstage' should be 'MS' or 'evol'.")
+        return
 
     if method == 'middelkoop':
         if evstage in ('MS'):
