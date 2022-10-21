@@ -88,7 +88,7 @@ def calc_rhk(smw, smw_err, bv, method='middelkoop', evstage='MS'):
         Error on R'HK.
 
     The calibration used by the HARPS pipeline is the 'middelkoop', the most widely used. Only for main sequence stars.
-    The 'rutten' calibration is more useful if using dwarfs hotter than B-V = 0.44, cooler than B-V = 1.2, and/or giants (and subgiants).
+    The 'rutten' calibration is more useful if using evolved stars (giants and subgiants).
     The 'mascareno' calibration includes cooler M-dwarfs. Only for MS.
 
     Range of the 'middelkoop' calibration (MS): 0.44 < B-V < 1.20
