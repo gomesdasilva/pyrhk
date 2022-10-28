@@ -273,7 +273,7 @@ def get_bv(star_id, alerts=True):
         err_msg = f"*** ERROR: Could not identify {star_id}."
         if alerts:
             print(err_msg)
-        return np.nan, np.nan, np.nan
+        return np.nan, np.nan, np.nan, err_msg
 
     if query is None:
         err_msg = f"*** ERROR: Could not identify {star_id}."
@@ -290,7 +290,7 @@ def get_bv(star_id, alerts=True):
         err_msg = f"*** ERROR: {star_id}: No values of B and/or V in Simbad to calculate B-V."
         if alerts:
             print(err_msg)
-        return np.nan, np.nan, np.nan
+        return np.nan, np.nan, np.nan, err_msg
     else:
         bv = flux_b - flux_v
 
@@ -301,4 +301,4 @@ def get_bv(star_id, alerts=True):
     bv_err = np.sqrt(flux_b_err**2 + flux_v_err**2)
     bv_ref = flux_v_ref
 
-    return bv, bv_err, bv_ref
+    return bv, bv_err, bv_ref, err_msg
