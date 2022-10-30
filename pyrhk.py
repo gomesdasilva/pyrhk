@@ -254,8 +254,6 @@ def get_bv(star_id, alerts=True):
         Error on 'bv'.
     bv_ref : string
         Reference of flux V magnitude (generally the same as B mag).
-    err_msg : string
-        Error message. If 'OK', there was no error.
     """
     customSimbad = Simbad()
     customSimbad.add_votable_fields('flux(V)')
@@ -273,7 +271,7 @@ def get_bv(star_id, alerts=True):
         err_msg = f"*** ERROR: Could not identify {star_id}."
         if alerts:
             print(err_msg)
-        return np.nan, np.nan, np.nan, err_msg
+        return np.nan, np.nan, np.nan
 
     if query is None:
         err_msg = f"*** ERROR: Could not identify {star_id}."
@@ -290,7 +288,7 @@ def get_bv(star_id, alerts=True):
         err_msg = f"*** ERROR: {star_id}: No values of B and/or V in Simbad to calculate B-V."
         if alerts:
             print(err_msg)
-        return np.nan, np.nan, np.nan, err_msg
+        return np.nan, np.nan, np.nan
     else:
         bv = flux_b - flux_v
 
@@ -301,4 +299,4 @@ def get_bv(star_id, alerts=True):
     bv_err = np.sqrt(flux_b_err**2 + flux_v_err**2)
     bv_ref = flux_v_ref
 
-    return bv, bv_err, bv_ref, err_msg
+    return bv, bv_err, bv_ref
